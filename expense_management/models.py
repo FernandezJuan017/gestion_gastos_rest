@@ -74,8 +74,25 @@ class Transaction(models.Model):
     date = models.DateTimeField(default=datetime.now())
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     note = models.CharField(max_length=100)
+    labels = models.ManyToManyField('Label', related_name='transactions', through='LabelTransaction')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self) -> str:
         return f"[{self.user.name}] {self.type.type} {self.date} ${self.amount} - {self.category.name}"
+    
+#Transfers
+class Transfer(models.Model):
+    origin_transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE) 
+    destination_transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE) 
+    date = models.DateTimeField(default=datetime.now())
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+
+#Labels
+class Label(models.Model):
+    name = models.CharField(max_length=100)
+    
+#LabelTransaction
+class LabelTransaction():
+    label = models.ForeignKey(Label, on_delete=models.CASCADE)
+    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
