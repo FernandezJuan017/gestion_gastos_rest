@@ -1,19 +1,12 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 from datetime import datetime
 from django_enum_choices.fields import Enum
 from django_enum_choices.fields import EnumChoiceField
 
    
-#Users
-class User(models.Model):
-    name = models.CharField(max_length=150)
-    surmame = models.CharField(max_length=150)
-    create_at = models.DateTimeField(auto_now_add=True)
-    deleted_at = models.DateTimeField(null=True, blank=True)
-    
-    def __str__(self) -> str:
-        return "%s, %s" % (self.name, self.surmame)
-    
+# Users
+class User(AbstractUser):  
     @property
     def fullname(self) -> str:
         return f"{self.surmame}, {self.name}"
@@ -74,7 +67,6 @@ class Label(models.Model):
     name = models.CharField(max_length=100)
     transactions = models.ManyToManyField('Transaction', related_name='trasaction_labels', through='LabelTransaction')
     
-
         
 #Transactions
 class Transaction(models.Model):
