@@ -6,3 +6,7 @@ from expense_management.api.serializers import CategorySerializer
 class CategoryList(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    
+class CategoryGetUpdate(generics.RetrieveUpdateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
