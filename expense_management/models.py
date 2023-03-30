@@ -1,19 +1,12 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 from datetime import datetime
 from django_enum_choices.fields import Enum
 from django_enum_choices.fields import EnumChoiceField
 
    
-#Users
-class User(models.Model):
-    name = models.CharField(max_length=150)
-    surmame = models.CharField(max_length=150)
-    create_at = models.DateTimeField(auto_now_add=True)
-    deleted_at = models.DateTimeField(null=True, blank=True)
-    
-    def __str__(self) -> str:
-        return "%s, %s" % (self.name, self.surmame)
-    
+# Users
+class User(AbstractUser):  
     @property
     def fullname(self) -> str:
         return f"{self.surmame}, {self.name}"
@@ -62,8 +55,19 @@ class TransactionType(models.Model):
     effect = EnumChoiceField(TypeEffect, default=TypeEffect.INGRESO)
     
     def __str__(self) -> str:
-        return "%s - Efecto: %s" (self.type, self.effect)
+        return "%s - Efecto: %s" % (self.type, self.effect)
     
+ #LabelTransaction
+class LabelTransaction(models.Model):
+    label = models.ForeignKey('Label', on_delete=models.CASCADE)
+    transaction = models.ForeignKey('Transaction', on_delete=models.CASCADE)
+       
+#Labels
+class Label(models.Model):
+    name = models.CharField(max_length=100)
+    transactions = models.ManyToManyField('Transaction', related_name='trasaction_labels', through='LabelTransaction')
+    
+        
 #Transactions
 class Transaction(models.Model):
     type = models.ForeignKey(TransactionType, on_delete=models.CASCADE)
@@ -74,8 +78,17 @@ class Transaction(models.Model):
     date = models.DateTimeField(default=datetime.now())
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     note = models.CharField(max_length=100)
+    labels = models.ManyToManyField('Label', related_name='labels_transactions', through='LabelTransaction')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self) -> str:
         return f"[{self.user.name}] {self.type.type} {self.date} ${self.amount} - {self.category.name}"
+    
+#Transfers
+class Transfer(models.Model):
+    origin_transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE, related_name='transfer_origin_transaction') 
+    destination_transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE, related_name='transfer_destination_transaction') 
+    date = models.DateTimeField(default=datetime.now())
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+
