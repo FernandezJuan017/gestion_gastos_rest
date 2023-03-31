@@ -10,3 +10,7 @@ class CategoryList(generics.ListAPIView):
 class CategoryGetUpdate(generics.RetrieveUpdateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    
+class CategoryCreate(generics.CreateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer    
