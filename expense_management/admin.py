@@ -1,6 +1,6 @@
 from django.contrib import admin
 from expense_management.models import (Category_Type,Category, Account,EffectType,TransactionType,
-                                       LabelTransaction, Label, Transaction, Transfer)
+                                       LabelTransaction, Label, Transaction, Transfer, User)
 
 # Register your models here.
 admin.site.register(Category_Type)
@@ -12,6 +12,8 @@ admin.site.register(Transaction)
 admin.site.register(LabelTransaction)
 admin.site.register(Label)
 admin.site.register(Transfer)
+admin.site.register(User)
+
 
 
 
