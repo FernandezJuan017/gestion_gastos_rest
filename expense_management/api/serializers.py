@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from expense_management.models import Category_Type, Category
+from expense_management.models import Category_Type, Category, Account
 
 #Category Type
 class CategoryTypeSerializer(serializers.ModelSerializer):
@@ -14,6 +14,12 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = '__all__' #['id', 'name', 'description', 'type', 'parent_category']
+
+#Accounts
+class AccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = '__all__'
         
         
         
